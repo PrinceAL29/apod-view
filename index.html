@@ -5,78 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APOD View</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Georgia, 'Times New Roman', Times, serif;
-            background: #0a172b;
-            color: white;
-        }
-
-        #image {
-            width: 50%;
-            transition: 0.3s;
-        }
-
-        #image:hover {
-            border-radius: 20px;
-            box-shadow: 1px 0px 15px white;
-        }
-
-        #explanation {
-            padding: 0 10%;
-            line-height: 140%;
-        }
-
-        @media (orientation: portrait) {
-            body {
-                font-size: 10px;
-            }
-
-            #image {
-                width: 90%;
-            }
-            #image:hover {
-            border-radius: 15px;
-            box-shadow: 1px 0px 10px white;
-        }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <h1 id="title">Loading..</h1>
     <p id="date"></p>
-    <img id="image" src="" alt="">
+    <img id="image" src="" alt="" crossorigin>
     <p id="explanation"></p>
-    <script>
-        async function getData() {
-            const url = `https://api.nasa.gov/planetary/apod?api_key=dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU`;
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
-                }
-                const apodData = await response.json();
-
-                const title = document.getElementById('title');
-                const image = document.getElementById('image');
-                const explanation = document.getElementById('explanation');
-                const date = document.getElementById('date');
-
-                title.innerText = apodData.title;
-                image.src = apodData.url;
-                explanation.innerText = apodData.explanation;
-                date.innerText = apodData.date;
-
-                console.log(apodData);
-            } catch (error) {
-                console.error(error.message);
-            }
-        }
-        getData();
-
-    </script>
+    <script src="script.js"></script>
 </body>
-
 </html>

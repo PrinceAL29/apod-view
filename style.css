@@ -1,0 +1,37 @@
+body {
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #0a172b;
+    color: white;
+    text-shadow: 1px 1px black;
+}
+
+#image {
+    width: 50%;
+    transition: 0.3s;
+}
+
+#image:hover {
+    border-radius: 20px;
+    box-shadow: 1px 0px 15px white;
+}
+
+#explanation {
+    padding: 0 10%;
+    line-height: 140%;
+}
+
+@media (orientation: portrait) {
+    body {
+        font-size: 10px;
+    }
+
+    #image {
+        width: 90%;
+    }
+
+    #image:hover {
+        border-radius: 15px;
+        box-shadow: 1px 0px 10px white;
+    }
+}
