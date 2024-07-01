@@ -1,5 +1,5 @@
 async function getData() {
-    const url = `https://api.nasa.gov/planetary/apod?api_key=dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU`;
+    const url = `https://api.nasa.gov/planetary/apod?api_key=dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU&thumbs=true`;
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -13,12 +13,13 @@ async function getData() {
         const date = document.getElementById('date');
 
         title.innerText = apodData.title;
-        image.src = apodData.url;
         explanation.innerText = apodData.explanation;
         date.innerText = apodData.date;
 
         if (apodData.media_type === "video") {
-            image.src = "https://miro.medium.com/v2/resize:fit:800/1*hFwwQAW45673VGKrMPE2qQ.png";
+            image.src = apodData.thumbnail_url;
+        } else {
+            image.src = apodData.url;
         }
 
         image.addEventListener("load", () => {
@@ -32,7 +33,8 @@ async function getData() {
         console.error(error.message);
     }
 }
-getData();
+
+window.addEventListener("load", getData);
 
 const getAverageColor = (img) => {
 
@@ -65,6 +67,4 @@ const getAverageColor = (img) => {
     return { r, g, b };
 };
 
-
-const image = document.getElementById('image');
 
