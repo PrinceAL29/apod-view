@@ -4,6 +4,7 @@ body {
     background-color: #0a172b;
     color: white;
     text-shadow: 1px 1px black;
+    transition: 0.3s;
 }
 
 #image {
