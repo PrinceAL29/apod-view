@@ -12,14 +12,16 @@ async function getData() {
         const explanation = document.getElementById('explanation');
         const date = document.getElementById('date');
 
+        const corsProxy = "https://api.allorigins.win/raw?url=";
+
         title.innerText = apodData.title;
         explanation.innerText = apodData.explanation;
         date.innerText = apodData.date;
 
         if (apodData.media_type === "video") {
-            image.src = apodData.thumbnail_url;
+            image.src = corsProxy + apodData.thumbnail_url;
         } else {
-            image.src = apodData.url;
+            image.src = corsProxy + apodData.url;
         }
 
         image.addEventListener("load", () => {
