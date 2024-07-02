@@ -27,7 +27,9 @@ body {
     border-radius: 5px;
     border: none;
     background: white;
-    font-size: 26px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 0.5% 1%;
     margin: auto;
     margin-top: 3%;
 }
@@ -36,12 +38,13 @@ body {
     height: 100%;
     width: 100%;
     padding-top: 25%;
-    font-size: 20px;
+    font-size: 30px;
+    font-weight: bolder;
     display: none;
     top: 0;
     left: 0;
     z-index: 10;
-    background-color: black;
+    background-color: rgb(0 0 0 / 80%);
 }
 
 @media (orientation: portrait) {
