@@ -4,7 +4,7 @@ body {
     background-color: #0a172b;
     color: white;
     text-shadow: 1px 1px black;
-    transition: 0.3s;
+    transition: 0.9s;
 }
 
 #image {
@@ -20,6 +20,28 @@ body {
 #explanation {
     padding: 0 10%;
     line-height: 140%;
+}
+
+#random-btn {
+    display: none;
+    border-radius: 5px;
+    border: none;
+    background: white;
+    font-size: 26px;
+    margin: auto;
+    margin-top: 3%;
+}
+#loading {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    padding-top: 25%;
+    font-size: 20px;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: black;
 }
 
 @media (orientation: portrait) {

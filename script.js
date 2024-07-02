@@ -32,6 +32,7 @@ async function getData() {
             const { r, g, b } = getAverageColor(image);
             console.log(r, g, b)
             document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
+            document.getElementById('random-btn').style.display = 'block'
         });
 
         console.log(apodData);
@@ -39,6 +40,59 @@ async function getData() {
         console.error(error.message);
     }
 }
+
+async function getRandom() {
+    const randomUrl = `https://api.nasa.gov/planetary/apod?api_key=dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU&thumbs=true&count=1`;
+    try {
+        const loading = document.getElementById('loading');
+        loading.style.display = "block"
+        const response = await fetch(randomUrl);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+        const apodData = jsonData[0];
+
+        const title = document.getElementById('title');
+        const image = document.getElementById('image');
+        const explanation = document.getElementById('explanation');
+        const date = document.getElementById('date');
+        const link = document.getElementById('link');
+
+        const corsProxy = "https://api.allorigins.win/raw?url=";
+
+        title.innerText = apodData.title;
+        explanation.innerText = apodData.explanation;
+        date.innerText = apodData.date;
+
+        if (apodData.media_type === "video") {
+            image.src = corsProxy + apodData.thumbnail_url;
+            link.href = apodData.url;
+        } else {
+            image.src = corsProxy + apodData.url;
+            link.href = apodData.url;
+        }
+
+        image.addEventListener("load", () => {
+            loading.style.display = "none"
+            const { r, g, b } = getAverageColor(image);
+            console.log(r, g, b)
+            document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
+        });
+
+        console.log(apodData);
+    } catch (error) {
+        console.error(error.message);
+    }
+
+}
+
+
+
+const randomBtn = document.getElementById('random-btn');
+
+randomBtn.addEventListener("click", getRandom);
 
 window.addEventListener("load", getData);
 
