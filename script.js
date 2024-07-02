@@ -5,12 +5,14 @@ async function getData() {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
+
         const apodData = await response.json();
 
         const title = document.getElementById('title');
         const image = document.getElementById('image');
         const explanation = document.getElementById('explanation');
         const date = document.getElementById('date');
+        const link = document.getElementById('link');
 
         const corsProxy = "https://api.allorigins.win/raw?url=";
 
@@ -20,8 +22,10 @@ async function getData() {
 
         if (apodData.media_type === "video") {
             image.src = corsProxy + apodData.thumbnail_url;
+            link.href = apodData.url;
         } else {
             image.src = corsProxy + apodData.url;
+            link.href = apodData.url;
         }
 
         image.addEventListener("load", () => {
