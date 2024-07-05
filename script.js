@@ -1,40 +1,44 @@
+const corsProxy = "https://api.allorigins.win/raw?url=";
+const apiKey = "dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU";
+const title = document.getElementById('title');
+const image = document.getElementById('image');
+const explanation = document.getElementById('explanation');
+const date = document.getElementById('date');
+const link = document.getElementById('link');
+const randomBtn = document.getElementById('random-btn');
+const loading = document.getElementById('loading');
+
+image.crossOrigin = "Anonymous";
+
+async function fetchData(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+    }
+    return response.json();
+}
+
+function updateDOM(apodData) {
+    title.innerText = apodData.title;
+    explanation.innerText = apodData.explanation;
+    date.innerText = apodData.date;
+
+    const imageUrl = apodData.media_type === "video" ? apodData.thumbnail_url : apodData.url;
+    image.src = corsProxy + encodeURIComponent(imageUrl);
+    link.href = apodData.url;
+
+    image.addEventListener("load", () => {
+        const { r, g, b } = getAverageColor(image);
+        document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
+        loading.style.display = "none";
+        randomBtn.style.display = 'block';
+    });
+}
+
 async function getData() {
-    const url = `https://api.nasa.gov/planetary/apod?api_key=dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU&thumbs=true`;
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        const apodData = await response.json();
-
-        const title = document.getElementById('title');
-        const image = document.getElementById('image');
-        const explanation = document.getElementById('explanation');
-        const date = document.getElementById('date');
-        const link = document.getElementById('link');
-
-        const corsProxy = "https://api.allorigins.win/raw?url=";
-
-        title.innerText = apodData.title;
-        explanation.innerText = apodData.explanation;
-        date.innerText = apodData.date;
-
-        if (apodData.media_type === "video") {
-            image.src = corsProxy + apodData.thumbnail_url;
-            link.href = apodData.url;
-        } else {
-            image.src = corsProxy + apodData.url;
-            link.href = apodData.url;
-        }
-
-        image.addEventListener("load", () => {
-            const { r, g, b } = getAverageColor(image);
-            console.log(r, g, b)
-            document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
-            document.getElementById('random-btn').style.display = 'block'
-        });
-
+        const apodData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&thumbs=true`);
+        updateDOM(apodData);
         console.log(apodData);
     } catch (error) {
         console.error(error.message);
@@ -42,77 +46,37 @@ async function getData() {
 }
 
 async function getRandom() {
-    const randomUrl = `https://api.nasa.gov/planetary/apod?api_key=dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU&thumbs=true&count=1`;
     try {
-        const loading = document.getElementById('loading');
-        loading.style.display = "block"
-        const response = await fetch(randomUrl);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        const jsonData = await response.json();
+        loading.style.display = "block";
+        const jsonData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&thumbs=true&count=1`);
         const apodData = jsonData[0];
-
-        const title = document.getElementById('title');
-        const image = document.getElementById('image');
-        const explanation = document.getElementById('explanation');
-        const date = document.getElementById('date');
-        const link = document.getElementById('link');
-
-        const corsProxy = "https://api.allorigins.win/raw?url=";
-
-        title.innerText = apodData.title;
-        explanation.innerText = apodData.explanation;
-        date.innerText = apodData.date;
-
-        if (apodData.media_type === "video") {
-            image.src = corsProxy + apodData.thumbnail_url;
-            link.href = apodData.url;
-        } else {
-            image.src = corsProxy + apodData.url;
-            link.href = apodData.url;
-        }
-
-        image.addEventListener("load", () => {
-            loading.style.display = "none"
-            const { r, g, b } = getAverageColor(image);
-            console.log(r, g, b)
-            document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
-        });
-
+        updateDOM(apodData);
         console.log(apodData);
     } catch (error) {
         console.error(error.message);
+        loading.style.display = "none";
     }
-
 }
 
-
-
-const randomBtn = document.getElementById('random-btn');
-
 randomBtn.addEventListener("click", getRandom);
-
 window.addEventListener("load", getData);
 
-const getAverageColor = (img) => {
-
+function getAverageColor(img) {
     const max = 10; // Max size (Higher num = better precision but slower)
     const { naturalWidth: iw, naturalHeight: ih } = img;
-    const ctx = document.createElement`canvas`.getContext`2d`;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     const sr = Math.min(max / iw, max / ih); // Scale ratio
     const w = Math.ceil(iw * sr); // Width
     const h = Math.ceil(ih * sr); // Height
-    const a = w * h;              // Area
+    const a = w * h; // Area
 
-    img.crossOrigin = 1;
-    ctx.canvas.width = w;
-    ctx.canvas.height = h;
+    canvas.width = w;
+    canvas.height = h;
     ctx.drawImage(img, 0, 0, w, h);
 
     const data = ctx.getImageData(0, 0, w, h).data;
-    let r = g = b = 0;
+    let r = 0, g = 0, b = 0;
 
     for (let i = 0; i < data.length; i += 4) {
         r += data[i];
@@ -120,11 +84,9 @@ const getAverageColor = (img) => {
         b += data[i + 2];
     }
 
-    r = ~~(r / a);
-    g = ~~(g / a);
-    b = ~~(b / a);
+    r = Math.floor(r / a);
+    g = Math.floor(g / a);
+    b = Math.floor(b / a);
 
     return { r, g, b };
-};
-
-
+}
