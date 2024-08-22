@@ -10,6 +10,14 @@ const loading = document.getElementById('loading');
 
 image.crossOrigin = "Anonymous";
 
+const dateObj = new Date();
+
+let currentDate = `${dateObj.getFullYear()}-${("0" + (dateObj.getMonth() + 1)).substr(-2)}-${("0" + dateObj.getDate()).substr(-2)}`;
+let inputDate = document.getElementById("dateObj");
+let data = document.getElementById("data");
+
+inputDate.setAttribute('max', currentDate);
+
 async function fetchData(url) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -32,6 +40,7 @@ function updateDOM(apodData) {
         document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
         loading.style.display = "none";
         randomBtn.style.display = 'block';
+        inputDate.style.display = 'block';
     });
 }
 
@@ -39,11 +48,23 @@ async function getData() {
     try {
         const apodData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&thumbs=true`);
         updateDOM(apodData);
-        console.log(apodData);
+        // console.log("inital loade",apodData);
     } catch (error) {
         console.error(error.message);
     }
 }
+async function getDateData() {
+    try {
+        loading.style.display = "block";
+        const apodData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${inputDate.value}`);
+        updateDOM(apodData);
+        // console.log("Date loade",apodData);
+    } catch (error) {
+        console.error(error.message);
+        loading.style.display = "none";
+    }
+}
+
 
 async function getRandom() {
     try {
@@ -51,14 +72,20 @@ async function getRandom() {
         const jsonData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&thumbs=true&count=1`);
         const apodData = jsonData[0];
         updateDOM(apodData);
-        console.log(apodData);
+        // console.log("random loade",apodData);
     } catch (error) {
         console.error(error.message);
         loading.style.display = "none";
     }
 }
 
-randomBtn.addEventListener("click", getRandom);
+randomBtn.addEventListener("click",  ()=> {
+    if(inputDate.value === "") {
+        getRandom()
+    } else {
+        getDateData()
+    }
+});
 window.addEventListener("load", getData);
 
 function getAverageColor(img) {

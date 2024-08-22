@@ -22,17 +22,36 @@ body {
     line-height: 140%;
 }
 
-#random-btn {
-    display: none;
-    border-radius: 5px;
+.input-box {
+    display: flex;
+    justify-content: center;
+    gap: 1%;
+    background: #ffffff29;
+}
+
+#dateObj {
+    /* display: none; */
     border: none;
     background: white;
     font-size: 15px;
     font-weight: bold;
     padding: 0.5% 1%;
-    margin: auto;
-    margin-top: 3%;
 }
+
+#random-btn {
+    /* display: none; */
+    border: none;
+    background: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 0.5% 1%;
+}
+
+#random-btn:hover,#dateObj:hover {
+    border-radius: 5px;
+    box-shadow: 1px 0px 10px white;
+}
+
 #loading {
     position: absolute;
     height: 100%;
@@ -50,6 +69,7 @@ body {
 @media (orientation: portrait) {
     body {
         font-size: 10px;
+        margin: unset;
     }
 
     #image {
