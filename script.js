@@ -55,12 +55,14 @@ async function getData() {
 }
 async function getDateData() {
     try {
+        document.body.style.overflow = "hidden"
         loading.style.display = "block";
         const apodData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${inputDate.value}`);
         updateDOM(apodData);
         // console.log("Date loade",apodData);
     } catch (error) {
         console.error(error.message);
+        document.body.style.overflow = "inherit"
         loading.style.display = "none";
     }
 }
@@ -68,6 +70,7 @@ async function getDateData() {
 
 async function getRandom() {
     try {
+        document.body.style.overflow = "hidden"
         loading.style.display = "block";
         const jsonData = await fetchData(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}&thumbs=true&count=1`);
         const apodData = jsonData[0];
@@ -75,12 +78,13 @@ async function getRandom() {
         // console.log("random loade",apodData);
     } catch (error) {
         console.error(error.message);
+        document.body.style.overflow = "inherit"
         loading.style.display = "none";
     }
 }
 
-randomBtn.addEventListener("click",  ()=> {
-    if(inputDate.value === "") {
+randomBtn.addEventListener("click", () => {
+    if (inputDate.value === "") {
         getRandom()
     } else {
         getDateData()
