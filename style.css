@@ -92,3 +92,8 @@ body {
     }
 
 }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #ffffff #ffffff29;
+  }
