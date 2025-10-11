@@ -1,5 +1,5 @@
 const corsProxy = "https://api.allorigins.win/raw?url=";
-const apiKey = "dkjh8GsofJdfBkWbLRPjQeFEDf5NlMJoccHVFfVU";
+const apiKey = "DEMO_KEY";
 
 const title = document.getElementById('title');
 const image = document.getElementById('image');
