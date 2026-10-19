@@ -3,23 +3,23 @@ const image = document.getElementById('image');
 const explanation = document.getElementById('explanation');
 const date = document.getElementById('date');
 const link = document.getElementById('link');
-const randomBtn = document.getElementById('random-btn');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const loading = document.getElementById('loading');
-const inputDate = document.getElementById("dateObj");
+// const randomBtn = document.getElementById('random-btn');
+// const prevBtn = document.getElementById('prev-btn');
+// const nextBtn = document.getElementById('next-btn');
+// const loading = document.getElementById('loading');
+// const inputDate = document.getElementById("dateObj");
 
 image.crossOrigin = "Anonymous";
 
-const dateObj = new Date();
-let currentDate = `${dateObj.getFullYear()}-${("0" + (dateObj.getMonth() + 1)).slice(-2)}-${("0" + dateObj.getDate()).slice(-2)}`;
-inputDate.setAttribute('max', currentDate);
+// const dateObj = new Date();
+// let currentDate = `${dateObj.getFullYear()}-${("0" + (dateObj.getMonth() + 1)).slice(-2)}-${("0" + dateObj.getDate()).slice(-2)}`;
+// inputDate.setAttribute('max', currentDate);
 
 let selectedDate = new Date();
 
 async function fetchData(url) {
     try {
-        const response = await fetch(url);
+        const response = await fetch("https://science.nasa.gov/wp-json/wp/v2/apod-basic/?api_key=DEMO_KEY");
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -33,10 +33,9 @@ async function fetchData(url) {
 
 function updateDOM(apodData) {
     title.innerText = apodData.title;
-    explanation.innerText = apodData.explanation;
+    // explanation.innerText = apodData.explanation;
     date.innerText = apodData.date;
-    const imageUrl = apodData.media_type === "video" ? apodData.thumbnail_url : apodData.url;
-    image.src = `/image-proxy?url=${encodeURIComponent(imageUrl)}`;
+    image.src = apodData.hdurl;
     link.href = apodData.url;
 
     image.onload = () => {
@@ -61,8 +60,8 @@ async function getData(date) {
         document.body.style.overflow = "hidden";
         loading.style.display = "block";
         const apodData = await fetchData(`/data?date=${date}`);
-        updateDOM(apodData);
-        checkNextButton(date);
+        console.log(apodData)
+        updateDOM(apodData[0]);
     } catch (error) {
         console.error(error.message);
         document.body.style.overflow = "auto";
@@ -70,66 +69,66 @@ async function getData(date) {
     }
 }
 
-async function getRandom() {
-    try {
-        document.body.style.overflow = "hidden";
-        loading.style.display = "block";
-        const jsonData = await fetchData(`/data?random=1`);
-        const apodData = jsonData[0];
-        updateDOM(apodData);
+// async function getRandom() {
+//     try {
+//         document.body.style.overflow = "hidden";
+//         loading.style.display = "block";
+//         const jsonData = await fetchData(`/data?random=1`);
+//         const apodData = jsonData[0];
+//         updateDOM(apodData);
 
-        selectedDate = new Date(apodData.date);
-        inputDate.value = apodData.date;
-        checkNextButton(apodData.date);
-    } catch (error) {
-        console.error(error.message);
-        document.body.style.overflow = "auto";
-        loading.style.display = "none";
-    }
-}
+//         selectedDate = new Date(apodData.date);
+//         inputDate.value = apodData.date;
+//         checkNextButton(apodData.date);
+//     } catch (error) {
+//         console.error(error.message);
+//         document.body.style.overflow = "auto";
+//         loading.style.display = "none";
+//     }
+// }
 
-function updateDateInput() {
-    inputDate.value = selectedDate.toISOString().split('T')[0];
-}
+// function updateDateInput() {
+//     inputDate.value = selectedDate.toISOString().split('T')[0];
+// }
 
-function checkNextButton(selectedDate) {
-    if (selectedDate === currentDate) {
-        nextBtn.disabled = true;
-    } else {
-        nextBtn.disabled = false;
-    }
-}
+// function checkNextButton(selectedDate) {
+//     if (selectedDate === currentDate) {
+//         nextBtn.disabled = true;
+//     } else {
+//         nextBtn.disabled = false;
+//     }
+// }
 
-function adjustDate(offset) {
-    selectedDate.setDate(selectedDate.getDate() + offset);
-    updateDateInput();
-    getData(formatDate(selectedDate));
-}
+// function adjustDate(offset) {
+//     selectedDate.setDate(selectedDate.getDate() + offset);
+//     updateDateInput();
+//     getData(formatDate(selectedDate));
+// }
 
-function formatDate(date) {
-    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
-}
+// function formatDate(date) {
+//     return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+// }
 
-randomBtn.addEventListener("click", () => {
-    getRandom();
-});
+// randomBtn.addEventListener("click", () => {
+//     getRandom();
+// });
 
-prevBtn.addEventListener("click", () => {
-    adjustDate(-1);
-});
+// prevBtn.addEventListener("click", () => {
+//     adjustDate(-1);
+// });
 
-nextBtn.addEventListener("click", () => {
-    adjustDate(1); // Go to next day
-});
+// nextBtn.addEventListener("click", () => {
+//     adjustDate(1); // Go to next day
+// });
 
-inputDate.addEventListener("change", () => {
-    selectedDate = new Date(inputDate.value);
-    getData(formatDate(selectedDate));
-});
+// inputDate.addEventListener("change", () => {
+//     selectedDate = new Date(inputDate.value);
+//     getData(formatDate(selectedDate));
+// });
 
 window.addEventListener("load", () => {
-    updateDateInput();
-    getData(formatDate(selectedDate));
+    // updateDateInput();
+    getData();
     checkNextButton(inputDate.value);
 });
 
